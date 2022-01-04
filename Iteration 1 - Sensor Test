@@ -1,0 +1,64 @@
+#include <LiquidCrystal.h>
+
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+const int trigPin = 9;
+const int echoPin = 10;
+
+long duration;
+int distance;
+int light = 6;
+
+void setup() {
+  // put your setup code here, to run once:
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(light, OUTPUT);
+
+  lcd.begin(16, 2);
+
+  Serial.begin(9600);
+  
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  digitalWrite(trigPin, LOW);
+  delay(2000);
+
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  duration = pulseIn(echoPin, HIGH);
+
+  distance = duration * 0.034 / 2;
+  Serial.print("Distance: ");
+  Serial.println(distance);
+
+  if(distance < 160){
+    digitalWrite(light, HIGH);
+    lcd.clear();
+    lcd.setCursor(1,0);
+    lcd.print("ENTRY DETECTED");
+    lcd.setCursor(2,1);
+    lcd.print("TURN AROUND!");
+    delay(500);
+    digitalWrite(light, LOW);
+    delay(500);
+    digitalWrite(light, HIGH);
+    delay(500);
+    digitalWrite(light, LOW);
+    delay(500);
+    digitalWrite(light, HIGH);
+    delay(2000);
+    
+    
+  }
+  else if(distance > 160){
+    digitalWrite(light, LOW);
+    lcd.clear();
+    lcd.noCursor();
+  }
+  else;
+}
